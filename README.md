@@ -49,14 +49,17 @@ Nothing is invented where the supply is silent. There is no AC input current, so
 are never shown as measurements, and the rails are not summed against the total (the readings are taken a few
 milliseconds apart, so they would not add up exactly).
 
-## Requirements
+## Requirements and dependencies
+
+The plugin installs nothing. It needs these to be present already:
 
 - Omarchy with the shell plugin system (`omarchy plugin` commands)
 - A Corsair "i" series supply that the `corsair-psu` kernel driver supports (the HXi and RMi lines; see the
   kernel's `corsair-psu` documentation for the exact list), connected with its USB cable to a motherboard header
 - The `corsair-psu` kernel driver (in the mainline kernel since 5.10). It appears as an hwmon device named
   `corsairpsu`. Check with `sensors | grep -A3 corsairpsu`
-- Python 3
+- Python 3 (standard library only; nothing to `pip` install)
+- `lm_sensors` is optional and only needed for the `sensors` check above; the plugin itself reads sysfs directly
 
 **Tested on:** a Corsair HX1200i on Arch / Omarchy, kernel 7.2. Other models the same driver supports should work,
 but I have not tested them. If yours does not, or shows odd values, please open an issue with the
@@ -74,7 +77,32 @@ Or, if you add it by hand, enable it on the bar:
 omarchy plugin enable io.github.tastyhub.corsair-plimsoll --section center
 ```
 
-Click the bolt to open the panel. To remove it: `omarchy plugin remove io.github.tastyhub.corsair-plimsoll`.
+Click the bolt to open the panel.
+
+## Remove
+
+```sh
+omarchy plugin remove io.github.tastyhub.corsair-plimsoll
+```
+
+That takes the widget off the bar and deletes the plugin. The only thing it leaves behind is the 12 hour history
+file, which you can delete if you do not want it:
+
+```sh
+rm -r ~/.local/state/omarchy-psu
+```
+
+## What it touches
+
+- **Reads** the supply's hwmon files under `/sys/class/hwmon/`. Read-only; no root, and no privileged commands
+  in the plugin itself. (Only loading the kernel driver, if it is not already loaded, needs root, and you do that
+  yourself outside the plugin.)
+- **Runs** one helper, `psu-read.py` (Python 3, in the plugin directory), and creates the state folder below with
+  `mkdir -p`.
+- **Writes** only `~/.local/state/omarchy-psu/history.json` (a few hundred bytes of 10 minute power buckets).
+- **Does not** change your Omarchy or shell configuration. Putting the widget on the bar is something you do with
+  `omarchy plugin enable`; the plugin never edits your settings itself.
+- **Does not** use the network, install packages, or run anything downloaded.
 
 ## Settings
 
@@ -119,7 +147,7 @@ directory, because the shell reloads a plugin whenever a file inside it changes.
 ## Troubleshooting
 
 - **"not detected" or no widget:** run `sensors | grep -A3 corsairpsu`. If nothing appears, the driver is not
-  loaded (`sudo modprobe corsair-psu`) or the USB cable is not connected.
+  loaded (load the `corsair-psu` module as root with `modprobe corsair-psu`) or the USB cable is not connected.
 - **Readings update slowly:** that is the USB link; the supply answers each query in a few milliseconds.
 - **Values look wrong for my model:** please open an issue with your `sensors` output.
 
