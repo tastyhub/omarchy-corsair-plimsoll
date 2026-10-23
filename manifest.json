@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.tastyhub.psu-monitor",
+  "name": "PSU Monitor",
+  "version": "1.0.0",
+  "author": "tastyhub",
+  "license": "MIT",
+  "description": "Live power-supply stats for a Corsair i-series PSU: total and per-rail power, voltage regulation, current, temperatures, fan, and 12 hour history, with an animated power-flow panel.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "PSU Monitor",
+    "description": "Total output in watts, with a panel of rails, thermals, fan and history",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "center",
+    "defaults": {
+      "showWatts": true,
+      "hideWhenAbsent": true,
+      "pollIntervalSec": 5,
+      "efficiencyRating": "platinum"
+    },
+    "schema": [
+      {
+        "key": "showWatts",
+        "type": "boolean",
+        "label": "Show watts beside the icon",
+        "defaultValue": true
+      },
+      {
+        "key": "hideWhenAbsent",
+        "type": "boolean",
+        "label": "Hide when no PSU is detected",
+        "defaultValue": true
+      },
+      {
+        "key": "pollIntervalSec",
+        "type": "integer",
+        "label": "Bar poll interval (seconds)",
+        "min": 2,
+        "max": 60,
+        "step": 1,
+        "defaultValue": 5
+      },
+      {
+        "key": "efficiencyRating",
+        "type": "enum",
+        "label": "80 PLUS rating of your PSU",
+        "options": [
+          "platinum",
+          "titanium",
+          "gold",
+          "silver",
+          "bronze",
+          "none"
+        ],
+        "defaultValue": "platinum",
+        "description": "Only used to estimate wall power and heat loss, which the supply does not report. Pick the tier printed on your unit; 'none' hides the estimate."
+      }
+    ]
+  }
+}
