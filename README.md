@@ -12,11 +12,13 @@ may be loaded. This is a load gauge for your supply.
 > "Corsair" is a trademark of its owner and is used here only to say which hardware the plugin reads.
 
 <p align="center">
-  <img src="docs/preview-normal.png" width="360" alt="The panel at idle: power-flow diagram, load gauge, three rail cards, thermals, fan and history">
+  <img src="docs/panel-animated.gif" width="360" alt="Animated panel over a simulated gaming session: the load ramps from idle to about 900 W and spikes past 1000 W while the power-flow dashes speed up, the gauge fills, the fan spins up and the history chart grows">
 </p>
 
-> The images in this README are renders of the panel's own view with sample readings, not screenshots of a
-> running desktop. The values shown are realistic for an HX1200i; the history trace is made up.
+> The animation and the images in this README are renders of the panel's own view, not screenshots of a
+> running desktop. The load in the animation is a simulated gaming session (idle, a ramp to about 900 W with
+> jitter, a dip, a spike past 1000 W, then back to idle), and the other values are realistic for an HX1200i. The
+> history traces are made up. The panel animates the same way on live readings.
 
 | Heavy load | A rail out of spec |
 |---|---|
