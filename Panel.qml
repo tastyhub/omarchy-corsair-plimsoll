@@ -10,7 +10,7 @@ import "Model.js" as Model
 // over it and does nothing else.
 Panel {
   id: root
-  moduleName: "io.github.tastyhub.psu-monitor"
+  moduleName: "io.github.tastyhub.corsair-plimsoll"
   ipcTarget: "psu-panel"
   manageIpc: false
 

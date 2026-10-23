@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "id": "io.github.tastyhub.psu-monitor",
-  "name": "PSU Monitor",
+  "id": "io.github.tastyhub.corsair-plimsoll",
+  "name": "Corsair Plimsoll",
   "version": "1.0.0",
   "author": "tastyhub",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "barWidget": "BarWidget.qml"
   },
   "barWidget": {
-    "displayName": "PSU Monitor",
+    "displayName": "Plimsoll for Corsair PSUs",
     "description": "Total output in watts, with a panel of rails, thermals, fan and history",
     "category": "System",
     "allowMultiple": false,

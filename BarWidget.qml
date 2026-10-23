@@ -16,7 +16,7 @@ import "Model.js" as Model
 //   middle (nothing)
 BarWidget {
   id: root
-  moduleName: "io.github.tastyhub.psu-monitor"
+  moduleName: "io.github.tastyhub.corsair-plimsoll"
 
   readonly property bool showWatts: root.setting("showWatts", true) !== false
   readonly property bool hideWhenAbsent: root.setting("hideWhenAbsent", true) !== false

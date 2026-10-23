@@ -1,8 +1,15 @@
-# Omarchy PSU Monitor
+# Corsair Plimsoll
 
-A bar widget and animated panel for **Corsair i-series power supplies** on [Omarchy](https://omarchy.org). It
-shows what the supply itself reports: total and per-rail power, voltage regulation, current, temperatures, fan,
+**A Corsair PSU monitor for Omarchy**: a bar widget and animated panel for Corsair i-series power supplies.
+
+It shows what the supply itself reports: total and per-rail power, voltage regulation, current, temperatures, fan,
 and a 12 hour history. Nothing is installed beyond the plugin, and nothing needs root.
+
+*The name:* a corsair is a privateer, and the Plimsoll line is the mark on a ship's hull that shows how heavily it
+may be loaded. This is a load gauge for your supply.
+
+> Unofficial. This is an independent project and is not affiliated with, endorsed by or sponsored by Corsair.
+> "Corsair" is a trademark of its owner and is used here only to say which hardware the plugin reads.
 
 <p align="center">
   <img src="docs/preview-normal.png" width="360" alt="The panel at idle: power-flow diagram, load gauge, three rail cards, thermals, fan and history">
@@ -58,16 +65,16 @@ output of `sensors` for the supply.
 ## Install
 
 ```sh
-omarchy plugin add https://github.com/tastyhub/omarchy-psu-monitor.git --enable
+omarchy plugin add https://github.com/tastyhub/omarchy-corsair-plimsoll.git --enable
 ```
 
 Or, if you add it by hand, enable it on the bar:
 
 ```sh
-omarchy plugin enable io.github.tastyhub.psu-monitor --section center
+omarchy plugin enable io.github.tastyhub.corsair-plimsoll --section center
 ```
 
-Click the bolt to open the panel. To remove it: `omarchy plugin remove io.github.tastyhub.psu-monitor`.
+Click the bolt to open the panel. To remove it: `omarchy plugin remove io.github.tastyhub.corsair-plimsoll`.
 
 ## Settings
 
