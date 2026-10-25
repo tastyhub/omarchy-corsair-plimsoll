@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 // Usage: node tests/model.test.js   (loads ../Model.js)
 const src = fs.readFileSync(path.join(__dirname, "..", "Model.js"), "utf8").replace(".pragma library", "");
-eval(src + ";globalThis.M = { RAILS, parseLine, loadPercent, deviationPercent, railBand, lineBand, estimatedEfficiency, estimatedAcWatts, normalizeRating, ratingLabel, ratingNote, EFFICIENCY_FLOORS, usePercent, severity, pushRing, ringStats, addEnergy, bucketId, recordBucket, bucketStats, parseHistory, mergeHistory, serializeHistory, formatWatts, formatVolts, formatAmps, formatTemp, formatPercent, formatSigned, formatEnergy, formatFan, fanNote, barText, BUCKET_MS, BUCKETS }");
+eval(src + ";globalThis.M = { RAILS, parseLine, loadPercent, deviationPercent, railBand, lineBand, estimatedEfficiency, estimatedAcWatts, normalizeRating, ratingLabel, ratingNote, EFFICIENCY_FLOORS, usePercent, severity, pushRing, extendRing, ringStats, addEnergy, bucketId, recordBucket, bucketStats, parseHistory, mergeHistory, serializeHistory, formatWatts, formatVolts, formatAmps, formatTemp, formatPercent, formatSigned, formatEnergy, formatFan, fanNote, barText, BUCKET_MS, BUCKETS }");
 
 let fail = 0;
 function eq(name, got, want) {
@@ -26,6 +26,31 @@ eq("sample line voltage", s.vin, 115);
 eq("sample fan stopped", s.fan, 0);
 const bar = M.parseLine('{"type":"bar","t":1,"w":234.0,"vrm":45.0,"case":44.5}');
 eq("bar", [bar.type, bar.w, bar.vrm, bar["case"]], ["bar", 234, 45, 44.5]);
+const barRails = M.parseLine('{"type":"bar","t":1,"w":234.0,"r":{"12v":200,"5v":20.5,"3v3":-4,"bogus":9},"vrm":45.0,"case":44.5}');
+eq("bar rails clamped, unknown dropped", barRails.r, { "12v": 200, "5v": 20.5 });
+eq("bar without rails", bar.r, {});
+
+// Chart ring: one point per second, gaps filled by interpolation.
+{
+  const pt = (a, b, c) => ({ total: a + b + c, "12v": a, "5v": b, "3v3": c });
+  const first = M.extendRing([], 0, pt(100, 10, 5), 10000, 300);
+  eq("first point starts the ring", [first.ring.length, first.t], [1, 10000]);
+  const filled = M.extendRing(first.ring, first.t, pt(200, 20, 10), 15000, 300);
+  eq("5 s gap becomes 5 points", filled.ring.length, 6);
+  eq("gap interpolated", [filled.ring[1]["12v"], filled.ring[3].total, filled.ring[5]["12v"]], [120, 184, 200]);
+  eq("newest point time", filled.t, 15000);
+  const early = M.extendRing(filled.ring, filled.t, pt(1, 1, 1), 15400, 300);
+  eq("reading under a second later is dropped", [early.ring.length, early.t], [6, 15000]);
+  const jitter = M.extendRing(filled.ring, filled.t, pt(210, 20, 10), 16900, 300);
+  eq("1.9 s later counts as 2 points", [jitter.ring.length, jitter.t], [8, 17000]);
+  const old = M.extendRing(filled.ring, filled.t, pt(1, 1, 1), 14000, 300);
+  eq("a reading from the past restarts the ring", old.ring.length, 1);
+  const late = M.extendRing(filled.ring, filled.t, pt(1, 1, 1), 15000 + 400000, 300);
+  eq("a gap longer than the ring restarts it", late.ring.length, 1);
+  let r = first;
+  for (let i = 1; i <= 400; i++) r = M.extendRing(r.ring, r.t, pt(i, 1, 1), 10000 + i * 1000, 300);
+  eq("ring capped", r.ring.length, 300);
+}
 eq("absent", M.parseLine('{"type":"absent"}'), { type: "absent" });
 
 // Hostile and broken input.

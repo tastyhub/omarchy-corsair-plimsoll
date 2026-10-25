@@ -87,6 +87,7 @@ function parseLine(text) {
       type: "bar",
       t: num(parsed.t, 0, 1e15) || 0,
       w: num(parsed.w, 0, 5000),
+      r: numbersFor(parsed.r, 0, 5000),
       vrm: num(parsed.vrm, -40, 200),
       "case": num(parsed["case"], -40, 200)
     }
@@ -206,6 +207,27 @@ function pushRing(arr, value, cap) {
   out.push(value)
   while (out.length > cap) out.shift()
   return out
+}
+
+// Adds a reading taken at time t (ms) to a chart ring that holds one point per second.
+// The slow reader reports every few seconds and the fast one every second, so the gap
+// since the last point is filled by straight lines to the new reading. Readings less than
+// a second after the last are dropped, and a gap longer than the ring restarts it.
+// Returns { ring, t } where t is the time of the newest point.
+function extendRing(ring, lastT, point, t, cap) {
+  var gap = Math.round((t - lastT) / 1000)
+  if (!ring.length || lastT <= 0 || gap > cap || t < lastT) return { ring: [point], t: t }
+  if (gap < 1) return { ring: ring, t: lastT }
+  var prev = ring[ring.length - 1]
+  var out = ring.slice()
+  for (var i = 1; i <= gap; i++) {
+    var f = i / gap
+    var step = {}
+    for (var k in point) step[k] = prev[k] + (point[k] - prev[k]) * f
+    out.push(step)
+  }
+  while (out.length > cap) out.shift()
+  return { ring: out, t: lastT + gap * 1000 }
 }
 
 function ringStats(arr) {

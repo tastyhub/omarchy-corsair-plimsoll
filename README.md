@@ -128,8 +128,10 @@ in its own process and prints one JSON object per line. The shell only parses th
 
 There are two readers:
 
-- **slow** (always on): total power and temperatures every few seconds, for the bar and the 12 hour history
-- **fast** (only while the panel is open): every rail once a second
+- **slow** (always on): total power, each rail's power and the temperatures every few seconds, for the bar, the
+  12 hour history and the chart, so the chart already has history when you open the panel
+- **fast** (only while the panel is open): every rail's voltage and current, and the fan, once a second. The chart
+  draws one point per second, so the gaps between slow readings are filled with straight lines.
 
 Everything the helper prints is parsed as untrusted data in `Model.js`: known keys only, numbers clamped to a
 plausible range. The 12 hour history is saved to `~/.local/state/omarchy-psu/history.json`, outside the plugin

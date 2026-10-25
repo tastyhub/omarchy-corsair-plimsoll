@@ -6,9 +6,10 @@ import "Model.js" as Model
 // Everything the widget knows about the PSU, with no drawing.
 //
 // Two helper processes feed it (see psu-read.py for why they are processes):
-//   slow  total power and temperatures every few seconds, always running; this is
-//         what the bar readout and the 12 hour history come from
-//   fast  every rail once a second, only while the panel is open
+//   slow  total power, each rail's power and temperatures every few seconds, always
+//         running; this is what the bar readout, the 12 hour history and the chart's
+//         history from before the panel was opened come from
+//   fast  every rail, voltage, current and the fan once a second, only while the panel is open
 // Each prints one JSON object per line; the lines are parsed as untrusted data.
 Item {
   id: root
@@ -42,6 +43,7 @@ Item {
   property bool _dirty: false
   property double _prevW: -1
   property double _prevT: -1
+  property double _ringT: 0          // time of the newest point in `history`
   property bool _destroyed: false
   readonly property string stateDir: (Quickshell.env("XDG_STATE_HOME") || (Quickshell.env("HOME") + "/.local/state")) + "/omarchy-psu/"
 
@@ -63,10 +65,14 @@ Item {
 
     present = true
     var total = msg.type === "sample" ? (msg.w && msg.w.total !== undefined ? msg.w.total : null) : msg.w
-    if (msg.type === "sample") {
-      sample = msg
-      var point = { total: total === null ? 0 : total, "12v": msg.w["12v"] || 0, "5v": msg.w["5v"] || 0, "3v3": msg.w["3v3"] || 0 }
-      history = Model.pushRing(history, point, 300)
+    if (msg.type === "sample") sample = msg
+    // Both readers feed the chart, so it already has history when the panel opens.
+    var rails = msg.type === "sample" ? msg.w : msg.r
+    if (total !== null && total !== undefined && rails) {
+      var point = { total: total, "12v": rails["12v"] || 0, "5v": rails["5v"] || 0, "3v3": rails["3v3"] || 0 }
+      var ext = Model.extendRing(history, _ringT, point, msg.t > 0 ? msg.t : Date.now(), 300)
+      history = ext.ring
+      _ringT = ext.t
     }
     if (total !== null && total !== undefined) {
       barWatts = total
@@ -100,10 +106,6 @@ Item {
     _dirty = false
     historyFile.setText(Model.serializeHistory(_buckets))
   }
-
-  // Fresh chart each time the panel opens: a ring that spans a closed panel would
-  // show a flat line where nothing was sampled.
-  onPanelOpenChanged: if (panelOpen) history = []
 
   Process { id: mkdirProc; command: ["mkdir", "-p", root.stateDir]; running: false }
 

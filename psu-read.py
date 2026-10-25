@@ -10,7 +10,8 @@ shell only parses the lines it prints.
 Lines, by "type":
   info    once at the start: model, rated watts and the driver's protection limits
   sample  every interval (full mode): every rail, both temperatures, fan, line voltage
-  bar     every interval (--bar mode): total power and temperatures only, three reads
+  bar     every interval (--bar mode): total power, each rail's power and the temperatures,
+          six reads, so the chart has history from before the panel was opened
   absent  the device is not there (unplugged, or driver not loaded); retried every 5 s
 
 Run as `python3 -I psu-read.py [--bar] [--interval SECONDS]`. Read-only, no root.
@@ -138,10 +139,16 @@ def sample(hw, ch):
 
 
 def bar(hw, ch):
+    rails = {}
+    for label, prefix in ch.items():
+        key = rail_of(label)
+        if key and label.startswith("power"):
+            rails[key] = scaled(hw, prefix, 1e6)
     return {
         "type": "bar",
         "t": int(time.time() * 1000),
         "w": scaled(hw, ch.get("power total"), 1e6),
+        "r": rails,
         "vrm": scaled(hw, ch.get("vrm temp"), 1000),
         "case": scaled(hw, ch.get("case temp"), 1000),
     }
