@@ -160,6 +160,24 @@ directory, because the shell reloads a plugin whenever a file inside it changes.
 Fan control is not offered: the driver exposes the duty read-only. The supply's debugfs counters (uptime and the
 like) need root and are left out. Temperatures are shown in Celsius.
 
+## Changelog
+
+A running list of what has been added, newest first.
+
+**2026-10-25**
+- **Chart history from before the panel opens.** The always-on reader now also reads each rail's power, and both
+  readers feed one chart with a point per second. The chart is filled (up to 5 minutes) the moment you open the
+  panel instead of starting empty. Gaps between the 5 second readings are drawn as straight lines.
+
+**2026-10-23**
+- **Animated preview.** A 10 second animation of the panel under a simulated gaming load, at the top of this page.
+- **Renamed to Corsair Plimsoll**, with an unofficial / not-affiliated-with-Corsair note.
+- **Marketplace-ready.** Install, remove and "what it touches" sections, and a preview image.
+- **First release.** Bar readout with the bolt and live watts; animated panel with total and per-rail power,
+  voltage and current (+12 V, +5 V, +3.3 V); voltage regulation against the ATX band; VRM and case temperatures;
+  fan speed and duty with zero-RPM mode; mains voltage; 12 hour range, average and highest output (kept across
+  restarts); energy since the shell started; estimated AC draw and heat lost, using your `efficiencyRating`.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
