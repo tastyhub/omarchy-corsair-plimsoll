@@ -162,21 +162,22 @@ like) need root and are left out. Temperatures are shown in Celsius.
 
 ## Changelog
 
-A running list of what has been added, newest first.
+Every feature with the date it was added, newest first.
 
-**2026-10-25**
-- **Chart history from before the panel opens.** The always-on reader now also reads each rail's power, and both
-  readers feed one chart with a point per second. The chart is filled (up to 5 minutes) the moment you open the
-  panel instead of starting empty. Gaps between the 5 second readings are drawn as straight lines.
-
-**2026-10-23**
-- **Animated preview.** A 10 second animation of the panel under a simulated gaming load, at the top of this page.
-- **Renamed to Corsair Plimsoll**, with an unofficial / not-affiliated-with-Corsair note.
-- **Marketplace-ready.** Install, remove and "what it touches" sections, and a preview image.
-- **First release.** Bar readout with the bolt and live watts; animated panel with total and per-rail power,
-  voltage and current (+12 V, +5 V, +3.3 V); voltage regulation against the ATX band; VRM and case temperatures;
-  fan speed and duty with zero-RPM mode; mains voltage; 12 hour range, average and highest output (kept across
-  restarts); energy since the shell started; estimated AC draw and heat lost, using your `efficiencyRating`.
+| Added | Feature | What it is |
+|---|---|---|
+| 2026-10-25 | Chart history before the panel opens | The chart is filled (up to 5 minutes) the moment you open the panel, instead of starting empty. The always-on reader now also reads each rail's power, and both readers feed one chart with a point per second. |
+| 2026-10-23 | Animated preview | A 10 second animation of the panel under a simulated gaming load, at the top of this page. |
+| 2026-10-23 | Renamed to Corsair Plimsoll | New name and an unofficial / not-affiliated-with-Corsair note. |
+| 2026-10-23 | Marketplace-ready | Install, remove and "what it touches" sections, and a preview image. |
+| 2026-10-23 | `efficiencyRating` setting | Choose your unit's 80 PLUS tier (platinum, titanium, gold, silver, bronze or none) for the wall-power estimate. |
+| 2026-10-23 | Estimated AC draw and heat lost | Wall power and conversion loss from the 80 PLUS tier, always labelled "est." |
+| 2026-10-23 | 12 hour range, average and highest output | Kept across restarts in the state folder. |
+| 2026-10-23 | Energy counter | Watt-hours delivered since the shell started. |
+| 2026-10-23 | Fan and temperatures | Fan speed and duty (a stopped fan is zero-RPM mode), VRM and case temperature against the supply's limit, and mains voltage. |
+| 2026-10-23 | Per-rail voltage regulation | How far +12 V, +5 V and +3.3 V sit from nominal against the ATX band, with the supply's protection limits in tooltips. |
+| 2026-10-23 | Animated panel | Total and per-rail power, voltage and current, with flowing power lines, a load gauge and a spinning fan. |
+| 2026-10-23 | Bar readout | A bolt with live wattage on the Omarchy bar. |
 
 ## License
 
