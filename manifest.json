@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.tastyhub.corsair-plimsoll",
   "name": "Corsair Plimsoll",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "tastyhub",
   "license": "MIT",
   "description": "Live power-supply stats for a Corsair i-series PSU: total and per-rail power, voltage regulation, current, temperatures, fan, and 12 hour history, with an animated power-flow panel.",

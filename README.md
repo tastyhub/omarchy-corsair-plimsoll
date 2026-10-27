@@ -166,6 +166,7 @@ Every feature with the date it was added, newest first.
 
 | Added | Feature | What it is |
 |---|---|---|
+| 2026-10-27 | Version 1.1.0 | First version bump, so the chart fix below can be told apart from 1.0.0. |
 | 2026-10-25 | Chart history before the panel opens | The chart is filled (up to 5 minutes) the moment you open the panel, instead of starting empty. The always-on reader now also reads each rail's power, and both readers feed one chart with a point per second. |
 | 2026-10-23 | Animated preview | A 10 second animation of the panel under a simulated gaming load, at the top of this page. |
 | 2026-10-23 | Renamed to Corsair Plimsoll | New name and an unofficial / not-affiliated-with-Corsair note. |
